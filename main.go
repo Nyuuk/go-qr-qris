@@ -4,16 +4,19 @@ import (
 	"bytes"
 	"encoding/base64"
 	"fmt"
+	"image"
+	_ "image/jpeg"
+	_ "image/png"
 	"os"
 	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
+	goqr "github.com/liyue201/goqr"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	qrcodeGen "github.com/skip2/go-qrcode"
-	qrcodeRead "github.com/tuotoo/qrcode"
 )
 
 func convertCRC16(input string) string {
@@ -83,18 +86,32 @@ func main() {
 			log.Error().Err(err).Msg("Failed to parse body")
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request body"})
 		}
+		log.Info().Msgf("Received base64 length: %d", len(body.QRBase64))
+		if len(body.QRBase64) < 20 {
+			log.Warn().Msg("Base64 string too short, possibly invalid QR image")
+		}
 		imgBytes, err := base64.StdEncoding.DecodeString(body.QRBase64)
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to decode base64")
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid base64"})
 		}
-		qrMatrix, err := qrcodeRead.Decode(bytes.NewReader(imgBytes))
+		log.Info().Msgf("Decoded image bytes length: %d", len(imgBytes))
+		img, _, err := image.Decode(bytes.NewReader(imgBytes))
 		if err != nil {
-			log.Error().Err(err).Msg("Failed to decode QR")
+			log.Error().Err(err).Msg("Failed to decode image")
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid image format"})
+		}
+		qrCodes, err := goqr.Recognize(img)
+		if err != nil {
+			log.Error().Err(err).Msg("Failed to decode QR (goqr)")
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to decode QR"})
 		}
-		log.Info().Msg("String extracted from QR")
-		return c.JSON(fiber.Map{"text": qrMatrix.Content})
+		if len(qrCodes) == 0 {
+			log.Error().Msg("No QR code found in image")
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "No QR code found"})
+		}
+		log.Info().Msg("String extracted from QR (goqr)")
+		return c.JSON(fiber.Map{"text": string(qrCodes[0].Payload)})
 	})
 
 	apiV1.Post("/qris-statis-to-dinamis", func(c *fiber.Ctx) error {
