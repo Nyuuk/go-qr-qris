@@ -305,6 +305,11 @@ func main() {
 		return c.JSON(fiber.Map{"text": string(qrCodes[0].Payload)})
 	})
 
+	// Healthcheck endpoint
+	apiV1.Get("/health", func(c *fiber.Ctx) error {
+		return c.JSON(fiber.Map{"status": "ok", "time": time.Now().Format(time.RFC3339)})
+	})
+
 	log.Info().Msg(fmt.Sprintf("Starting Fiber server on :%s", appPort))
 	app.Listen(fmt.Sprintf(":%s", appPort))
 }
